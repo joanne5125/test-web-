@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>你是 DOOU 還是 金桑 ？三友測驗</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    :root{
+      --cream:#fff7eb;--paper:#fffaf0;--pink:#f48991;--pink2:#ffd6d6;--red:#d92d12;--brown:#4b2b22;--gold:#e8aa23;--orange:#ff8a3d;--line:#f0b6a8;--shadow:0 18px 45px rgba(123,63,36,.18);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;font-family:"Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;color:var(--brown);background:
+      radial-gradient(circle at 10% 12%, rgba(255,150,160,.42) 0 13%, transparent 32%),
+      radial-gradient(circle at 88% 88%, rgba(255,207,93,.45) 0 15%, transparent 35%),
+      linear-gradient(135deg,#ffe1d6 0%,#fff1df 45%,#ffe9b9 100%);overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:
+      radial-gradient(rgba(255,255,255,.5) 1px, transparent 1px),
+      radial-gradient(rgba(183,105,75,.12) 1px, transparent 1px);background-size:18px 18px,26px 26px;opacity:.55;z-index:-1}
+
+    .wrap{width:min(100%,1040px);margin:0 auto;padding:18px 12px 36px}
+    .page-card{position:relative;background:linear-gradient(180deg,#fffaf0,#fff2e4);border:4px solid rgba(255,255,255,.92);border-radius:34px;box-shadow:var(--shadow);overflow:hidden;padding:28px 18px 22px}
+    .page-card:before{content:"";position:absolute;inset:12px;border:3px solid #ef9fa3;border-radius:26px;pointer-events:none;z-index:2}
+    .page-card:after{content:"♡ ✦ 🍅 ✦ ♡ ✦ 🍅 ✦ ♡";position:absolute;left:0;right:0;top:86px;text-align:center;color:#ef8b94;font-size:20px;letter-spacing:18px;opacity:.42;pointer-events:none}
+
+    .awning{position:absolute;top:0;left:28px;right:28px;height:58px;display:flex;overflow:hidden;border-radius:0 0 22px 22px;z-index:3}
+    .awning span{flex:1;background:#fff3df;border-radius:0 0 20px 20px;border:1px solid rgba(235,143,137,.35)}
+    .awning span:nth-child(even){background:#f5a0a3}
+
+    .hero{position:relative;z-index:4;padding:62px 18px 10px;text-align:center}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#fff7df;border:2px solid #ffd58a;border-radius:999px;font-weight:900;color:#aa5a12;box-shadow:0 8px 16px rgba(230,160,55,.14);margin-bottom:18px}
+    h1{margin:0 auto;font-size:clamp(38px,9vw,86px);line-height:1.02;letter-spacing:-1px;color:var(--red);text-shadow:3px 3px 0 #fff,5px 5px 0 rgba(108,56,34,.18);max-width:820px}
+    .ribbon{display:inline-block;margin:18px auto 10px;padding:12px 26px;color:white;font-weight:950;font-size:clamp(16px,3.5vw,22px);background:linear-gradient(135deg,#ef7d86,#f7a0a5);border-radius:18px;box-shadow:0 8px 0 rgba(154,72,66,.18);border:2px dashed rgba(255,255,255,.65)}
+    .subtitle{font-size:clamp(18px,4vw,26px);line-height:1.65;margin:20px auto 10px;font-weight:850;max-width:760px}
+
+    .hero-buttons,.result-buttons{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:22px}
+    button,.link-btn{border:0;border-radius:999px;padding:15px 25px;font-size:18px;font-weight:950;cursor:pointer;transition:.18s ease;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit}
+    .primary{background:linear-gradient(135deg,#ef321e,#ff8b43);color:white;box-shadow:0 12px 22px rgba(220,54,32,.26), inset 0 -4px 0 rgba(151,32,18,.16)}
+    .secondary{background:#fffaf0;color:var(--red);border:3px solid #ffc5bd;box-shadow:0 8px 14px rgba(135,70,34,.06)}
+    button:hover,.link-btn:hover{transform:translateY(-2px) scale(1.01)}
+
+    .quiz-card,.result-card{display:none;position:relative;z-index:4;padding:62px 18px 20px}
+    .topbar{display:flex;justify-content:space-between;gap:14px;align-items:center;max-width:820px;margin:0 auto 20px;background:#fffdf6;border:2px solid #f3c6b8;border-radius:999px;padding:10px 14px}
+    .progress-text{font-weight:950;color:var(--red);white-space:nowrap}
+    .bar{flex:1;height:13px;background:#ffe1d1;border-radius:999px;overflow:hidden;border:1px solid #ffd0bd}
+    .bar span{display:block;height:100%;width:0%;background:linear-gradient(90deg,#f68289,var(--gold));transition:.35s ease;border-radius:999px}
+
+    .question-box{animation:slideIn .35s ease;max-width:860px;margin:0 auto;background:rgba(255,255,255,.68);border:2px solid #f2c8bc;border-radius:28px;padding:22px;box-shadow:0 10px 20px rgba(116,58,31,.08);min-height:500px;display:grid;place-items:center;text-align:center}
+    @keyframes slideIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+    .q-number{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:999px;background:#ee6e76;color:white;font-size:24px;font-weight:950;box-shadow:0 4px 0 rgba(124,56,51,.18);margin-bottom:14px}
+    .question{font-size:clamp(25px,5.8vw,44px);line-height:1.35;margin:0 0 20px;font-weight:950;color:var(--brown)}
+
+    .answers{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%}
+    .answer{position:relative;background:#fffdf7;border:2px solid #f3c6b8;color:var(--brown);border-radius:22px;padding:52px 16px 20px;font-size:18px;line-height:1.55;text-align:center;min-height:170px;box-shadow:0 8px 14px rgba(116,58,31,.06)}
+    .answer:before{position:absolute;left:14px;top:14px;width:38px;height:38px;border-radius:999px;color:white;background:#ef6f78;display:grid;place-items:center;font-weight:950;font-size:20px;box-shadow:0 3px 0 rgba(124,56,51,.16)}
+    .answer.a:before{content:"A"}.answer.b:before{content:"B"}
+    .answer:hover{border-color:#ef7d86;background:#fff5ec;transform:translateY(-3px)}
+    .answer .icon{display:block;font-size:36px;margin-top:10px}
+
+    #captureArea{background:linear-gradient(180deg,#fffaf0,#fff2e4);border:4px solid #f0a6a6;border-radius:28px;padding:14px;box-shadow:0 10px 18px rgba(116,58,31,.08);max-width:680px;margin:0 auto}
+    #finalImage{width:100%;display:block;border-radius:18px}
+
+    .result-title-small{text-align:center;font-weight:950;font-size:24px;margin:0 auto 14px;color:var(--brown)}
+    .result-buttons{margin-top:18px}
+    .share-note{text-align:center;margin:12px 0 0;font-size:14px;color:#7c4a36;line-height:1.6}
+
+    .sparkle{position:fixed;font-size:28px;pointer-events:none;animation:pop .8s ease forwards;z-index:99}
+    @keyframes pop{0%{opacity:0;transform:scale(.3) translateY(0)}30%{opacity:1;transform:scale(1.2) translateY(-20px)}100%{opacity:0;transform:scale(.8) translateY(-80px)}}
+
+    @media(max-width:720px){
+      .wrap{padding:12px 9px 28px}
+      .page-card{border-radius:30px;padding:24px 10px 18px}
+      .page-card:before{inset:9px;border-width:2px}
+      .page-card:after{font-size:15px;letter-spacing:8px;top:76px}
+      .awning{left:16px;right:16px;height:46px}
+      .hero{padding-top:50px}
+      .subtitle{font-size:20px}
+      button,.link-btn{font-size:17px;padding:14px 20px}
+      .quiz-card,.result-card{padding:50px 10px 18px}
+      .topbar{border-radius:20px;align-items:center}
+      .question-box{padding:16px;min-height:520px}
+      .answers{grid-template-columns:1fr;gap:12px}
+      .answer{min-height:128px;padding:48px 14px 16px;font-size:17px}
+      #captureArea{padding:9px;border-width:3px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <main class="page-card">
+      <div class="awning" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+
+      <!-- 首頁（已移除角色圖片） -->
+      <section class="hero" id="startPage">
+        <div class="badge">🍅 三友藥妝測驗</div>
+        <h1>你是 多友醬<br>還是 金桑？</h1>
+        <div class="ribbon">測出你是「療癒系暖心店長」還是「帥氣闊騷大戶」</div>
+        <p class="subtitle">選擇最符合你的答案！</p>
+
+        <div class="hero-buttons">
+          <button class="primary" onclick="startQuiz()">開始測驗 ✨</button>
+          <a class="link-btn secondary" href="https://www.tomods.com.tw" target="_blank">逛逛三友藥妝</a>
+        </div>
+      </section>
+
+      <section class="quiz-card" id="quizPage">
+        <div class="topbar">
+          <div class="progress-text" id="progressText">1 / 8</div>
+          <div class="bar"><span id="barFill"></span></div>
+        </div>
+        <div class="question-box" id="questionBox"></div>
+      </section>
+
+      <section class="result-card" id="resultPage">
+        <p class="result-title-small">心理測驗結果</p>
+        <h2 id="resultName" style="text-align:center; font-size:26px; margin:10px 0;"></h2>
+        <div id="captureArea">
+          <img id="finalImage" src="DOOU結果.jpg" alt="心理測驗結果圖">
+        </div>
+        <div class="result-buttons">
+          <button class="primary" onclick="downloadResult()">下載結果圖</button>
+          <button class="secondary" onclick="restartQuiz()">再測一次</button>
+          <a class="link-btn secondary" href="https://www.tomods.com.tw" target="_blank">去官網逛逛</a>
+        </div>
+        <p class="share-note">結果頁會直接顯示你提供的結果圖。手機若無法下載，可長按圖片儲存或截圖分享。</p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const questions = [
+      { q:"走進店裡，你第一個反應是？", a:"先觀察大家需要什麼，默默幫忙", b:"直接走最有氣勢的路線，像來巡店一樣", ia:"🔎", ib:"🕶️" },
+      { q:"朋友心情不好時，你會？", a:"陪他聊天，還記得他喜歡什麼", b:"帶他去吃好吃的，順便買一堆東西", ia:"💬", ib:"🛒" },
+      { q:"你的購物習慣比較像？", a:"精準挑選，還會記得下次回購", b:"喜歡就買，直接升級豪華版", ia:"📝", ib:"🛍️" },
+      { q:"看到限量商品時，你會？", a:"先幫朋友想要不要買", b:"不用想，直接收下", ia:"🐶", ib:"🔥" },
+      { q:"你的社交風格？", a:"慢慢熟，但一熟就超貼心", b:"外表很 chill，其實很講義氣", ia:"💗", ib:"😎" },
+      { q:"如果你開店，你會是？", a:"記住每位客人喜好的暖心店長", b:"有風格、有氣場的老闆", ia:"🛍️", ib:"👑" },
+      { q:"假日最想做什麼？", a:"吃美食＋收集小確幸，例如番茄", b:"打扮帥氣＋出門走跳＋耍帥", ia:"🍅", ib:"🕶️" },
+      { q:"朋友怎麼形容你？", a:"超貼心，什麼都記得！", b:"看起來很酷，其實很好笑", ia:"💕", ib:"😎" }
+    ];
+
+    let current = 0;
+    let score = {doou:0, kim:0};
+
+    function startQuiz(){
+      document.getElementById('startPage').style.display='none';
+      document.getElementById('quizPage').style.display='block';
+      document.getElementById('resultPage').style.display='none';
+      current = 0; score = {doou:0, kim:0};
+      renderQuestion(); window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function renderQuestion(){
+      const item = questions[current];
+      document.getElementById('progressText').textContent = `${current+1} / ${questions.length}`;
+      document.getElementById('barFill').style.width = `${((current+1)/questions.length)*100}%`;
+      const box = document.getElementById('questionBox');
+      box.style.animation = 'none'; void box.offsetWidth; box.style.animation = 'slideIn .35s ease';
+      box.innerHTML = `
+        <div style="width:100%">
+          <div class="q-number">${current+1}</div>
+          <h2 class="question">${item.q}</h2>
+          <div class="answers">
+            <button class="answer a" onclick="choose('doou', event)">${item.a}<span class="icon">${item.ia}</span></button>
+            <button class="answer b" onclick="choose('kim', event)">${item.b}<span class="icon">${item.ib}</span></button>
+          </div>
+        </div>`;
+    }
+
+    function choose(type, event){
+      score[type]++;
+      popSparkle(event.clientX, event.clientY, type);
+      setTimeout(()=>{ 
+        current++; 
+        current < questions.length ? renderQuestion() : showResult(); 
+      },220);
+    }
+
+    function showResult(){
+      document.getElementById('quizPage').style.display='none';
+      document.getElementById('resultPage').style.display='block';
+
+      const key = score.doou >= score.kim ? 'doou' : 'kim';
+
+      if(key === 'doou'){
+        document.getElementById('finalImage').src = 'https://raw.githubusercontent.com/joanne5125/test-web/main/doou.jpg.png';
+        document.getElementById('resultName').innerText = '你是 DOOU 多友醬 🍅';
+      }else{
+        document.getElementById('finalImage').src = 'https://raw.githubusercontent.com/joanne5125/test-web/main/kimsum.jpg.png';
+        document.getElementById('resultName').innerText = '你是 KimSun 金桑 💰';
+      }
+
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function restartQuiz(){
+      document.getElementById('resultPage').style.display='none';
+      document.getElementById('startPage').style.display='block';
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function downloadResult(){
+      const img = document.getElementById('finalImage');
+      const link = document.createElement('a');
+      link.download = '三友靈魂測驗結果.jpg';
+      link.href = img.src; link.click();
+    }
+
+    function popSparkle(x,y,type){
+      const t = document.createElement('div');
+      t.className = 'sparkle';
+
+      // A = DOOU 🍅，B = KimSun 💰🔥
+      if(type === 'doou'){
+        t.textContent = '🍅';
+      }else{
+        const icons = ['💰','🔥'];
+        t.textContent = icons[Math.floor(Math.random()*icons.length)];
+      }
+
+      t.style.left = (x-10)+'px';
+      t.style.top = (y-10)+'px';
+      document.body.appendChild(t);
+      setTimeout(()=>t.remove(),850);
+    }
+  </script>
+</body>
+</html>
